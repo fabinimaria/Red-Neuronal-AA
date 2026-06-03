@@ -4,7 +4,6 @@ from typing import Callable, Optional
 import torch
 from torch import nn
 from torch.utils.data import DataLoader
-from torchvision import datasets, transforms
 
 
 ProgressCallback = Callable[[int, int, float, float, float], None]
@@ -22,6 +21,8 @@ def get_data_loaders(
     data_dir: str = "data",
     batch_size: int = 128,
 ) -> tuple[DataLoader, DataLoader]:
+    from torchvision import datasets, transforms
+
     train_transform = transforms.Compose(
         [
             transforms.RandomAffine(

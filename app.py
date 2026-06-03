@@ -453,8 +453,8 @@ with train_tab:
                 format_func=lambda value: f"{value:g}",
             )
 
-            train_clicked = st.button("Train", type="primary", width="stretch")
-            reset_clicked = st.button("Reset model", width="stretch")
+            train_clicked = st.button("Train", type="primary", use_container_width=True)
+            reset_clicked = st.button("Reset model", use_container_width=True)
 
         if reset_clicked:
             reset_model()
@@ -478,22 +478,29 @@ with train_tab:
                         delta=f"Train {train_acc:.2%} | Test {test_acc:.2%}",
                     )
 
-                with st.spinner("Entrenando la red neuronal..."):
-                    history = train_model(
-                        model=model,
-                        epochs=epochs,
-                        train_loader=train_loader,
-                        test_loader=test_loader,
-                        device=device,
-                        learning_rate=learning_rate,
-                        weight_decay=weight_decay,
-                        progress_callback=update_progress,
-                        save_path=str(MODEL_PATH),
-                    )
+                try:
+                    with st.spinner("Entrenando la red neuronal..."):
+                        history = train_model(
+                            model=model,
+                            epochs=epochs,
+                            train_loader=train_loader,
+                            test_loader=test_loader,
+                            device=device,
+                            learning_rate=learning_rate,
+                            weight_decay=weight_decay,
+                            progress_callback=update_progress,
+                            save_path=str(MODEL_PATH),
+                        )
 
-                st.session_state.history = history
-                st.session_state.model_loaded = True
-                st.success(f"Entrenamiento terminado. Modelo guardado en {MODEL_PATH.name}.")
+                    st.session_state.history = history
+                    st.session_state.model_loaded = True
+                    st.success(f"Entrenamiento terminado. Modelo guardado en {MODEL_PATH.name}.")
+                except RuntimeError as error:
+                    st.error(
+                        "No se pudo completar el entrenamiento en este entorno. "
+                        "La app sigue funcionando para dibujar y predecir con el modelo guardado."
+                    )
+                    st.exception(error)
 
             if st.session_state.history:
                 last = st.session_state.history[-1]
@@ -515,7 +522,7 @@ with train_tab:
                         }
                         for row in st.session_state.history
                     ],
-                    width="stretch",
+                    use_container_width=True,
                     hide_index=True,
                 )
             else:
@@ -538,7 +545,7 @@ with predict_tab:
                 display_toolbar=True,
                 key="mnist_canvas",
             )
-            predict_clicked = st.button("Predict", type="primary", width="stretch")
+            predict_clicked = st.button("Predict", type="primary", use_container_width=True)
 
     with pred_col:
         with st.container(border=True):
@@ -576,7 +583,7 @@ with predict_tab:
                             {"digit": digit, "probability": f"{probability:.2%}"}
                             for digit, probability in enumerate(probabilities)
                         ],
-                        width="stretch",
+                        use_container_width=True,
                         hide_index=True,
                     )
                 else:

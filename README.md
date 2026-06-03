@@ -86,7 +86,7 @@ La forma más simple de hacer pública la app es subir este proyecto a GitHub y 
 app.py
 ```
 
-7. En opciones avanzadas, elegí Python `3.10` si está disponible.
+7. En opciones avanzadas, elegí Python `3.10` o `3.11`. Evitá Python `3.14` para este proyecto.
 8. Hacé deploy.
 
 La app usa `requirements.txt` para instalar dependencias y `.streamlit/config.toml` para el tema visual.
